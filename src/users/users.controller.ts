@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { error } from 'console';
 
 interface User {
@@ -49,6 +49,15 @@ export class UsersController {
     this.users.push(body);
     return body;
   }
-}
 
+  //eliminar un user
+
+  @Delete(':id')
+  deleteUser(@Param('id') id: string) {
+    this.users = this.users.filter((user) => user.id !== id);
+    return {
+      message: 'user delete',
+    };
+  }
+}
 //find es un metodo de js que me busca el usurio por su id cuando hago ese llamado
