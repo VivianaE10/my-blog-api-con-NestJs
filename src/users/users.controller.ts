@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { error } from 'console';
 
 interface User {
@@ -48,7 +56,7 @@ export class UsersController {
   createUser(@Body() body: User) {
     const newUser = {
       ...body,
-      id: `${this.users.length + 1}`, //automatizar id para que se incremente autoamticamente,ya no es necesario enviarle el id
+      id: `${this.users.length + 1}`, //automatizar id para que se incremente autoamticamente,ya no es necesario enviarle el id, el backend lo genera
     };
     this.users.push(newUser);
     return newUser;
@@ -63,5 +71,25 @@ export class UsersController {
       message: 'user delete',
     };
   }
+
+  @Put(':id')
+  updateUser(@Param('id') id: string, @Body() actualizar: User) {
+    const posision = this.users.findIndex((user) => user.id === id);
+    if (posision === -1) {
+      return {
+        error: 'usuario no encontrado',
+      };
+    }
+    const actualData = this.users[posision];
+    const updateUser = {
+      ...actualData, //obtengo informacion anterior.mantengo la informacion que esta
+      ...actualizar, // actualiza la nueva informacion sobreescribe lo nuevo
+    };
+    this.users[posision] = updateUser; //actualizo los cambios en la posicion del arreglo
+    return updateUser; //envie esos nueva actualizacion
+  }
 }
+
 //find es un metodo de js que me busca el usurio por su id cuando hago ese llamado
+//findIndex es un metodo busca un elemento en el arreglo
+//-1 significa que el user no fue encontardo
