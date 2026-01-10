@@ -46,8 +46,12 @@ export class UsersController {
   //crear un nuevo user
   @Post()
   createUser(@Body() body: User) {
-    this.users.push(body);
-    return body;
+    const newUser = {
+      ...body,
+      id: `${this.users.length + 1}`, //automatizar id para que se incremente autoamticamente,ya no es necesario enviarle el id
+    };
+    this.users.push(newUser);
+    return newUser;
   }
 
   //eliminar un user
