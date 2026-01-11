@@ -3,11 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
-import { error } from 'console';
+import { CreateUserDto } from './user.dto';
 
 interface User {
   id: string;
@@ -45,18 +46,16 @@ export class UsersController {
   findUser(@Param('id') id: string) {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
-      return {
-        error: 'user not found 👨‍🦰',
-      };
+      throw new NotFoundException('usuario no encontardo con ese id'); //exepciones para validar datos
     }
     return user;
   }
   //crear un nuevo user
   @Post()
-  createUser(@Body() body: User) {
+  createUser(@Body() body: CreateUserDto) {
     const newUser = {
       ...body,
-      id: `${this.users.length + 1}`, //automatizar id para que se incremente autoamticamente,ya no es necesario enviarle el id, el backend lo genera
+      id: `${this.users.length + 1}`, //automatizar id para que se incremente autoamticamente,ya no es necesario enviarle el id, el backend lo genera y esta seria otra manera de actualizar el id pero con la fecha de creacion  id: `${new Date().getTime()}`,
     };
     this.users.push(newUser);
     return newUser;
